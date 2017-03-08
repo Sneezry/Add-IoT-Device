@@ -1,4 +1,4 @@
-# Add IoT Device
+# IoT Device
 
 A tool for Azure IoT Hub to add and remove devices
 
