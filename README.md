@@ -1,6 +1,6 @@
 # IoT Device
 
-A tool for Azure IoT Hub to add and remove devices
+A tool for Azure IoT Hub to add and remove devices in Bash
 
 Require OpenSSL installed.
 
