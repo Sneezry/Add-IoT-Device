@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 
 if [[ $# < 3 ]]
-    then echo "./add-iot-device.sh <device id> <iothub account name> <iothubowner primary key>"
+    then echo "./iot-device.sh <add/del> <device id> <iothub account name> <iothubowner primary key>"
     exit
 fi
 
-device_id=$1
-account=$2
-key=$(echo -n $3 | base64 --decode)
+action=$1
+device_id=$2
+account=$3
+key=$(echo -n $4 | base64 --decode)
 
 urlencode() {
     old_lc_collate=$LC_COLLATE
@@ -46,5 +47,11 @@ sig=${sig/\(/%28}
 sig=${sig/\)/%29}
 sig=${sig/\*/%2a}
 sas="SharedAccessSignature sr=${account}.azure-devices.net&sig=${sig}&se=${se}&skn=iothubowner"
-curl -X PUT -H "Authorization: ${sas}" -H "Content-Type: application/json" -d "{\"deviceId\":\"${device_id}\"}" $url
+if [[ $action == "add" ]]
+    then curl -X PUT -H "Authorization: ${sas}" -H "Content-Type: application/json" -d "{\"deviceId\":\"${device_id}\"}" $url
+elif [[ $action == "del" ]]
+    then curl -X DELETE -H "If-Match:*" -H "Authorization:${sas}" $url
+else
+    echo -n "Unknown action. Only support add and del."
+fi
 echo ""
