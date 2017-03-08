@@ -41,11 +41,6 @@ timestamp=$(date +%s)
 se=$(($timestamp+3600))
 sig=$(echo -n "${account}.azure-devices.net&${se}" | tr '&' '\n' | hmacsha256_sign | base64_encode)
 sig=$(urlencode $sig)
-sig=${sig/!/%21}
-sig=${sig/\'/%27}
-sig=${sig/\(/%28}
-sig=${sig/\)/%29}
-sig=${sig/\*/%2a}
 sas="SharedAccessSignature sr=${account}.azure-devices.net&sig=${sig}&se=${se}&skn=iothubowner"
 if [[ $action == "add" ]]
     then curl -X PUT -H "Authorization: ${sas}" -H "Content-Type: application/json" -d "{\"deviceId\":\"${device_id}\"}" $url
